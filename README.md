@@ -6,9 +6,8 @@ Ce projet a pour objectif de développer une application de gestion de jeux vid�
 
 ## Cadre de Développement
 
-- **École** : Nom de votre école
-- **Niveau d'études** : Votre niveau d'études
-- **Contrainte de délai** : Délai imparti pour le projet
+- **École** : Ynov campus
+- **Niveau d'études** : B1 informatique
 - **Groupe** : Réalisé en groupe de 2 personnes
 
 ## Stack Technique
@@ -20,6 +19,5 @@ Ce projet a pour objectif de développer une application de gestion de jeux vid�
 ## Instructions d'Installation
 
 1. Clonez le dépôt Git :
-   ```bash
    git clone https://votre-repo.git
    ```
