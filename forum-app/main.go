@@ -19,7 +19,7 @@ func main() {
 	}
 	defer db.Close()
 
-	initDB()
+	InitDB(db)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", RegisterHandler).Methods("POST")
@@ -30,35 +30,4 @@ func main() {
 
 	log.Println("Server started at :8080")
 	http.ListenAndServe(":8080", router)
-}
-
-func initDB() {
-	sqlStmt := `
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE,
-        username TEXT,
-        password TEXT
-    );
-    CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        title TEXT,
-        content TEXT,
-        category TEXT,
-        FOREIGN KEY(user_id) REFERENCES users(id)
-    );
-    CREATE TABLE IF NOT EXISTS comments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        post_id INTEGER,
-        user_id INTEGER,
-        content TEXT,
-        FOREIGN KEY(post_id) REFERENCES posts(id),
-        FOREIGN KEY(user_id) REFERENCES users(id)
-    );
-    `
-	_, err := db.Exec(sqlStmt)
-	if err != nil {
-		log.Fatalf("%q: %s\n", err, sqlStmt)
-	}
 }
