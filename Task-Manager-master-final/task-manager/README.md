@@ -9,7 +9,7 @@ Task Management Application :
 # Dépendances
 
 Ce projet utilise les librairies suivantes :
-Download gson JAR 2.8.2 with all dependencies: https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.2/source-code
+Download gson JAR 2.8.2 with all dependencies: https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.2/source-code.
 
 ## Gestions des Dépendances
 Créez un dossier lib (ou un autre nom de votre choix) à la racine de votre projet.
