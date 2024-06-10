@@ -8,14 +8,14 @@ import (
 
 func Page_index(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-        Index(w, "static/index.html")
+        Index(w, "template/index.html")
         return
     }
     http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 
 	if r.Method == http.MethodPost {
 		//code pour les formulaires
-
+		
 	}
 }
 
