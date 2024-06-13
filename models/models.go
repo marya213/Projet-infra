@@ -4,13 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
-	gorm.Model
-	Email    string `gorm:"unique"`
-	Username string `gorm:"unique"`
-	Password string
-}
-
 type Post struct {
 	gorm.Model
 	Title    string
@@ -31,4 +24,11 @@ type Comment struct {
 	User     User
 	Likes    int
 	Dislikes int
+}
+
+type User struct {
+	gorm.Model
+	Username string `gorm:"unique;not null"`
+	Email    string `gorm:"unique;not null"`
+	Password string `gorm:"not null"`
 }
