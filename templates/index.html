@@ -4,10 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <h1>Welcome to the Forum</h1>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+    <header>
+      <h1>Welcome to the Forum</h1>
+    </header>
+    <nav>
+      {{if .User}}
+      <span>Bienvenue, {{.User}}!</span>
+      <a href="/logout">Logout</a>
+      <a href="/create-post">Create Post</a>
+      {{else}}
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+      {{end}}
+    </nav>
+    <div class="container">
+      <h2>Posts</h2>
+      {{range .Posts}}
+      <div class="post">
+        <h3><a href="/post/{{.ID}}">{{.Title}}</a></h3>
+        <p>{{.Content}}</p>
+        <p><em>Posted by {{.User.Username}}</em></p>
+      </div>
+      {{else}}
+      <p>No posts available</p>
+      {{end}}
+    </div>
+    <footer>
+      <p>&copy; 2024 Forum</p>
+    </footer>
   </body>
 </html>

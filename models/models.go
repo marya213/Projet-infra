@@ -11,7 +11,6 @@ type Post struct {
 	UserID   uint
 	User     User
 	Comments []Comment
-	Category string
 	Likes    int
 	Dislikes int
 }
@@ -31,4 +30,11 @@ type User struct {
 	Username string `gorm:"unique;not null"`
 	Email    string `gorm:"unique;not null"`
 	Password string `gorm:"not null"`
+}
+
+type Like struct {
+	gorm.Model
+	UserID    uint
+	PostID    *uint
+	CommentID *uint
 }

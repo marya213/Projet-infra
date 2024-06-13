@@ -7,9 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
+var store = sessions.NewCookieStore([]byte("secret-key"))
 
 func main() {
 	// Initialisation de la base de données
@@ -20,8 +23,9 @@ func main() {
 	}
 
 	// Migrer les modèles
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Post{}, &models.Comment{}, &models.Like{})
 	handlers.SetDB(db)
+	handlers.SetStore(store)
 
 	// Initialiser le routeur
 	r := mux.NewRouter()
@@ -30,9 +34,15 @@ func main() {
 	r.HandleFunc("/", handlers.PageIndex).Methods("GET")
 	r.HandleFunc("/register", handlers.Register).Methods("GET", "POST")
 	r.HandleFunc("/login", handlers.Login).Methods("GET", "POST")
+	r.HandleFunc("/logout", handlers.Logout).Methods("GET")
+	r.HandleFunc("/create-post", handlers.CreatePost).Methods("GET", "POST")
+	r.HandleFunc("/post/{id}", handlers.ViewPost).Methods("GET")
+	r.HandleFunc("/post/{id}/comment", handlers.CreateComment).Methods("POST")
+	r.HandleFunc("/post/{id}/like", handlers.LikePost).Methods("POST")
+	r.HandleFunc("/post/{postID}/comment/{id}/like", handlers.LikeComment).Methods("POST")
 
 	// Servir les fichiers statiques (HTML, CSS, JS)
-	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./templates/"))))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
 	// Démarrer le serveur sur le port 8080
 	fmt.Println("Le serveur est en cours d'exécution sur http://localhost:8080")
