@@ -34,6 +34,27 @@
       {{else}}
       <p>No posts available</p>
       {{end}}
+
+      <h3>
+        <a href="/profile/{{.ProfileUser.Username}}/followers"
+          >Followers: {{.FollowersCount}}</a
+        >
+      </h3>
+      <h3>
+        <a href="/profile/{{.ProfileUser.Username}}/following"
+          >Following: {{.FollowingCount}}</a
+        >
+      </h3>
+
+      {{if ne .CurrentUserID .ProfileUser.ID}} {{if .IsFollowing}}
+      <form action="/profile/{{.ProfileUser.Username}}/unfollow" method="post">
+        <button type="submit">Unfollow</button>
+      </form>
+      {{else}}
+      <form action="/profile/{{.ProfileUser.Username}}/follow" method="post">
+        <button type="submit">Follow</button>
+      </form>
+      {{end}} {{end}}
     </div>
     <footer>
       <p>&copy; 2024 Forum</p>

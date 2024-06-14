@@ -293,18 +293,186 @@ func ViewProfile(w http.ResponseWriter, r *http.Request) {
 	var posts []models.Post
 	db.Where("user_id = ?", user.ID).Find(&posts)
 
+	var followers []models.Follower
+	var following []models.Follower
+	db.Preload("Follower").Where("follows_id = ?", user.ID).Find(&followers)
+	db.Preload("Follows").Where("follower_id = ?", user.ID).Find(&following)
+
 	data := map[string]interface{}{
-		"ProfileUser": user,
-		"Posts":       posts,
+		"ProfileUser":    user,
+		"Posts":          posts,
+		"Followers":      followers,
+		"Following":      following,
+		"FollowersCount": len(followers),
+		"FollowingCount": len(following),
 	}
 
-	session, _ := store.Get(r, "session")
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
 	currentUser, ok := session.Values["user"]
+	currentUserID := session.Values["userID"]
 	if ok {
 		data["CurrentUser"] = currentUser
+		data["CurrentUserID"] = currentUserID
 	} else {
 		data["CurrentUser"] = ""
+		data["CurrentUserID"] = uint(0)
+	}
+
+	// Check if the current user is following the profile user
+	var follower models.Follower
+	if db.Where("follower_id = ? AND follows_id = ?", currentUserID, user.ID).First(&follower).Error == nil {
+		data["IsFollowing"] = true
+	} else {
+		data["IsFollowing"] = false
 	}
 
 	renderTemplate(w, "profile", data)
+}
+
+func FollowUser(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
+	currentUserID, ok := session.Values["userID"]
+	if !ok {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Vérifiez si l'utilisateur suit déjà
+	var follower models.Follower
+	if err := db.Where("follower_id = ? AND follows_id = ?", currentUserID, user.ID).First(&follower).Error; err == nil {
+		// Déjà suivi, pas besoin de suivre à nouveau
+		http.Redirect(w, r, "/profile/"+username, http.StatusSeeOther)
+		return
+	}
+
+	follower = models.Follower{
+		FollowerID: currentUserID.(uint),
+		FollowsID:  user.ID,
+	}
+
+	if err := db.Create(&follower).Error; err != nil {
+		http.Error(w, "Unable to follow user", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/profile/"+username, http.StatusSeeOther)
+}
+
+func UnfollowUser(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
+	currentUserID, ok := session.Values["userID"]
+	if !ok {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Supprimer la relation de suivi
+	if err := db.Where("follower_id = ? AND follows_id = ?", currentUserID, user.ID).Delete(&models.Follower{}).Error; err != nil {
+		http.Error(w, "Unable to unfollow user", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/profile/"+username, http.StatusSeeOther)
+}
+
+func ViewFollowers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	var followers []models.Follower
+	db.Preload("Follower").Where("follows_id = ?", user.ID).Find(&followers)
+
+	data := map[string]interface{}{
+		"ProfileUser": user,
+		"Followers":   followers,
+	}
+
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
+	currentUser, ok := session.Values["user"]
+	currentUserID := session.Values["userID"]
+	if ok {
+		data["CurrentUser"] = currentUser
+		data["CurrentUserID"] = currentUserID
+	} else {
+		data["CurrentUser"] = ""
+		data["CurrentUserID"] = uint(0)
+	}
+
+	renderTemplate(w, "followers", data)
+}
+
+func ViewFollowing(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	var following []models.Follower
+	db.Preload("Follows").Where("follower_id = ?", user.ID).Find(&following)
+
+	data := map[string]interface{}{
+		"ProfileUser": user,
+		"Following":   following,
+	}
+
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
+	currentUser, ok := session.Values["user"]
+	currentUserID := session.Values["userID"]
+	if ok {
+		data["CurrentUser"] = currentUser
+		data["CurrentUserID"] = currentUserID
+	} else {
+		data["CurrentUser"] = ""
+		data["CurrentUserID"] = uint(0)
+	}
+
+	renderTemplate(w, "following", data)
 }

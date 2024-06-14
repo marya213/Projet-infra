@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// Migrer les modèles
-	db.AutoMigrate(&models.User{}, &models.Post{}, &models.Comment{}, &models.Like{})
+	db.AutoMigrate(&models.User{}, &models.Post{}, &models.Comment{}, &models.Like{}, &models.Follower{})
 	handlers.SetDB(db)
 	handlers.SetStore(store)
 
@@ -42,6 +42,10 @@ func main() {
 	r.HandleFunc("/post/{postID}/comment/{id}/like", handlers.LikeComment).Methods("POST")
 	r.HandleFunc("/category/{category}", handlers.PostsByCategory).Methods("GET")
 	r.HandleFunc("/profile/{username}", handlers.ViewProfile).Methods("GET")
+	r.HandleFunc("/profile/{username}/follow", handlers.FollowUser).Methods("POST")
+	r.HandleFunc("/profile/{username}/unfollow", handlers.UnfollowUser).Methods("POST")
+	r.HandleFunc("/profile/{username}/followers", handlers.ViewFollowers).Methods("GET")
+	r.HandleFunc("/profile/{username}/following", handlers.ViewFollowing).Methods("GET")
 
 	// Servir les fichiers statiques (HTML, CSS, JS)
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
