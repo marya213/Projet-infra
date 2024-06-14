@@ -28,11 +28,12 @@ type Comment struct {
 
 type User struct {
 	gorm.Model
-	Username  string     `gorm:"unique;not null"`
-	Email     string     `gorm:"unique;not null"`
-	Password  string     `gorm:"not null"`
-	Followers []Follower `gorm:"foreignKey:FollowsID"`
-	Following []Follower `gorm:"foreignKey:FollowerID"`
+	Username       string `gorm:"unique;not null"`
+	Email          string `gorm:"unique;not null"`
+	Password       string `gorm:"not null"`
+	ProfilePicture string
+	Followers      []Follower `gorm:"foreignKey:FollowsID"`
+	Following      []Follower `gorm:"foreignKey:FollowerID"`
 }
 
 type Like struct {

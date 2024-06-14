@@ -17,7 +17,12 @@
     </nav>
     <div class="container">
       <h2>Edit your profile</h2>
-      <form action="/profile/{{.User.Username}}/edit" method="post">
+      <form
+        id="edit-profile-form"
+        action="/profile/{{.User.Username}}/edit"
+        method="post"
+        enctype="multipart/form-data"
+      >
         <label for="username">Username:</label>
         <input
           type="text"
@@ -40,6 +45,9 @@
           >New Password (leave blank to keep current password):</label
         >
         <input type="password" id="password" name="password" />
+
+        <label for="profile_picture">Profile Picture:</label>
+        <input type="file" id="profile_picture" name="profile_picture" />
 
         <button type="submit">Save Changes</button>
       </form>

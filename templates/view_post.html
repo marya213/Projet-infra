@@ -13,7 +13,6 @@
     <nav>
       <a href="/">Home</a>
       {{if .User}}
-      <span>Bienvenue, <a href="/profile/{{.User}}">{{.User}}</a>!</span>
       <a href="/logout">Logout</a>
       {{else}}
       <a href="/login">Login</a>
