@@ -117,3 +117,20 @@ form textarea {
 form button {
   width: 100%;
 }
+
+/* Ajoutez ce style pour le bouton de modification */
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  font-size: 16px;
+  color: white;
+  background-color: #5cb85c;
+  text-align: center;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #4cae4c;
+}

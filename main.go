@@ -44,6 +44,7 @@ func main() {
 	r.HandleFunc("/profile/{username}", handlers.ViewProfile).Methods("GET")
 	r.HandleFunc("/profile/{username}/follow", handlers.FollowUser).Methods("POST")
 	r.HandleFunc("/profile/{username}/unfollow", handlers.UnfollowUser).Methods("POST")
+	r.HandleFunc("/profile/{username}/edit", handlers.EditProfile).Methods("GET", "POST")
 	r.HandleFunc("/profile/{username}/followers", handlers.ViewFollowers).Methods("GET")
 	r.HandleFunc("/profile/{username}/following", handlers.ViewFollowing).Methods("GET")
 

@@ -46,7 +46,11 @@
         >
       </h3>
 
-      {{if ne .CurrentUserID .ProfileUser.ID}} {{if .IsFollowing}}
+      {{if eq .CurrentUserID .ProfileUser.ID}}
+      <a href="/profile/{{.ProfileUser.Username}}/edit" class="button"
+        >Edit Profile</a
+      >
+      {{else}} {{if .IsFollowing}}
       <form action="/profile/{{.ProfileUser.Username}}/unfollow" method="post">
         <button type="submit">Unfollow</button>
       </form>

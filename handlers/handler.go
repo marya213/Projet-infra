@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"forum/models"
 	"html/template"
 	"net/http"
@@ -403,6 +404,62 @@ func UnfollowUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/profile/"+username, http.StatusSeeOther)
+}
+
+func EditProfile(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Unable to get session", http.StatusInternalServerError)
+		return
+	}
+	currentUserID, ok := session.Values["userID"]
+	if !ok {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	if user.ID != currentUserID.(uint) {
+		http.Error(w, "You do not have permission to edit this profile", http.StatusForbidden)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		r.ParseForm()
+		user.Username = r.FormValue("username")
+		user.Email = r.FormValue("email")
+		password := r.FormValue("password")
+
+		if password != "" {
+			user.Password = password // In a real application, hash the password before storing it
+		}
+
+		if err := db.Save(&user).Error; err != nil {
+			http.Error(w, "Unable to update profile", http.StatusInternalServerError)
+			return
+		}
+
+		// Mettre à jour la session avec le nouveau nom d'utilisateur
+		session.Values["user"] = user.Username
+		session.Save(r, w)
+
+		http.Redirect(w, r, fmt.Sprintf("/profile/%s", user.Username), http.StatusSeeOther)
+		return
+	}
+
+	data := map[string]interface{}{
+		"User": user,
+	}
+
+	renderTemplate(w, "edit_profile", data)
 }
 
 func ViewFollowers(w http.ResponseWriter, r *http.Request) {
