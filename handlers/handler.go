@@ -108,9 +108,10 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		r.ParseForm()
 		post := models.Post{
-			Title:   r.FormValue("title"),
-			Content: r.FormValue("content"),
-			UserID:  userID.(uint),
+			Title:    r.FormValue("title"),
+			Content:  r.FormValue("content"),
+			Category: r.FormValue("category"),
+			UserID:   userID.(uint),
 		}
 		result := db.Create(&post)
 		if result.Error != nil {
@@ -253,4 +254,57 @@ func LikeComment(w http.ResponseWriter, r *http.Request) {
 
 	postID := vars["postID"]
 	http.Redirect(w, r, "/post/"+postID, http.StatusSeeOther)
+}
+
+func PostsByCategory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	category := vars["category"]
+
+	var posts []models.Post
+	if err := db.Preload("User").Preload("Comments.User").Where("category = ?", category).Find(&posts).Error; err != nil {
+		http.Error(w, "Category not found", http.StatusNotFound)
+		return
+	}
+
+	session, _ := store.Get(r, "session")
+	user, ok := session.Values["user"]
+	data := map[string]interface{}{
+		"Posts":    posts,
+		"User":     user,
+		"Category": category,
+	}
+	if !ok {
+		data["User"] = ""
+	}
+
+	renderTemplate(w, "category_posts", data)
+}
+
+func ViewProfile(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	var user models.User
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	var posts []models.Post
+	db.Where("user_id = ?", user.ID).Find(&posts)
+
+	data := map[string]interface{}{
+		"ProfileUser": user,
+		"Posts":       posts,
+	}
+
+	session, _ := store.Get(r, "session")
+	currentUser, ok := session.Values["user"]
+	if ok {
+		data["CurrentUser"] = currentUser
+	} else {
+		data["CurrentUser"] = ""
+	}
+
+	renderTemplate(w, "profile", data)
 }

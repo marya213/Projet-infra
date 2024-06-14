@@ -40,6 +40,8 @@ func main() {
 	r.HandleFunc("/post/{id}/comment", handlers.CreateComment).Methods("POST")
 	r.HandleFunc("/post/{id}/like", handlers.LikePost).Methods("POST")
 	r.HandleFunc("/post/{postID}/comment/{id}/like", handlers.LikeComment).Methods("POST")
+	r.HandleFunc("/category/{category}", handlers.PostsByCategory).Methods("GET")
+	r.HandleFunc("/profile/{username}", handlers.ViewProfile).Methods("GET")
 
 	// Servir les fichiers statiques (HTML, CSS, JS)
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))

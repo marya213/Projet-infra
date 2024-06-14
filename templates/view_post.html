@@ -13,6 +13,7 @@
     <nav>
       <a href="/">Home</a>
       {{if .User}}
+      <span>Bienvenue, <a href="/profile/{{.User}}">{{.User}}</a>!</span>
       <a href="/logout">Logout</a>
       {{else}}
       <a href="/login">Login</a>
@@ -22,7 +23,14 @@
     <div class="container">
       <h2>Post Details</h2>
       <p>{{.Post.Content}}</p>
-      <p><em>Posted by {{.Post.User.Username}}</em></p>
+      <p>
+        <em
+          >Posted by
+          <a href="/profile/{{.Post.User.Username}}"
+            >{{.Post.User.Username}}</a
+          ></em
+        >
+      </p>
       <p>Likes: {{.Post.Likes}}</p>
       {{if .User}}
       <form action="/post/{{.Post.ID}}/like" method="post">
@@ -34,7 +42,12 @@
       {{range .Post.Comments}}
       <div class="comment">
         <p>{{.Content}}</p>
-        <p><em>Commented by {{.User.Username}}</em></p>
+        <p>
+          <em
+            >Commented by
+            <a href="/profile/{{.User.Username}}">{{.User.Username}}</a></em
+          >
+        </p>
         <p>Likes: {{.Likes}}</p>
         {{if $.User}}
         <form action="/post/{{$.Post.ID}}/comment/{{.ID}}/like" method="post">

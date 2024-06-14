@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index</title>
+    <title>Posts in {{.Category}}</title>
     <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <header>
-      <h1>Welcome to the Forum</h1>
+      <h1>Posts in {{.Category}}</h1>
     </header>
     <nav>
+      <a href="/">Home</a>
       {{if .User}}
       <span>Bienvenue, <a href="/profile/{{.User}}">{{.User}}</a>!</span>
       <a href="/logout">Logout</a>
@@ -29,12 +30,13 @@
         <p>
           <em
             >Posted by
-            <a href="/profile/{{.User.Username}}">{{.User.Username}}</a></em
+            <a href="/profile/{{.User.Username}}">{{.User.Username}}</a> in
+            {{.Category}}</em
           >
         </p>
       </div>
       {{else}}
-      <p>No posts available</p>
+      <p>No posts available in this category</p>
       {{end}}
     </div>
     <footer>
