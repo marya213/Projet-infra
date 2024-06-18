@@ -1,0 +1,47 @@
+body {
+  font-family: "Roboto Mono", monospace;
+  background: linear-gradient(135deg, #1a1a1d, #2d2d2d);
+  color: #e6e6e6;
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background-color: #4a4a4a;
+  color: #f44336;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 4px solid #2d2d2d;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between; /* Adjust alignment */
+  align-items: center; /* Center vertically */
+  background-color: #4a4a4a;
+  padding: 10px;
+  border-bottom: 2px solid #2d2d2d;
+}
+
+.welcome-message {
+  color: white;
+  margin-right: 10px;
+  font-size: 16px; /* Adjust font size if needed */
+}
+
+.emoji {
+  font-size: 40px; /* Increase the size of the emoji */
+  color: white; /* Make the emoji white */
+  margin-right: 10px; /* Add some space between the emoji and the text */
+}
+
+.nav-link {
+  color: white;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
