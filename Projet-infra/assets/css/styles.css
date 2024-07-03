@@ -1,0 +1,109 @@
+/* Style général */
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #0d0d0d;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+header {
+    background-color: #da8b8b;
+    padding: 20px 0;
+    text-align: center;
+}
+
+h1 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 36px;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Liste des jeux */
+.game-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+.game-item {
+    background-color: #5a5858;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.game-item img {
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+}
+
+.game-details {
+    margin-top: 10px;
+}
+
+.game-details h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.game-details p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.action-buttons {
+    margin-top: 10px;
+}
+
+.add-game-page {
+    background-color: #c99d9d;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.action-buttons a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.action-buttons a:hover {
+    text-decoration: underline;
+}
