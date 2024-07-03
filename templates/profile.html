@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile of {{.ProfileUser.Username}}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Profile of {{.ProfileUser.Username}}</h1>
+    </header>
+    <nav>
+      <a href="/">Home</a>
+      {{if .CurrentUser}}
+      <span
+        >Bienvenue,
+        <a href="/profile/{{.CurrentUser}}">{{.CurrentUser}}</a>!</span
+      >
+      <a href="/logout">Logout</a>
+      {{else}}
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+      {{end}}
+    </nav>
+    <div class="container">
+      <div class="profile-picture">
+        {{if .ProfileUser.ProfilePicture}}
+        <img
+          src="/{{.ProfileUser.ProfilePicture}}"
+          alt="Profile Picture"
+          class="profile-picture"
+        />
+        {{else}}
+        <img
+          src="/static/default-profile.png"
+          alt="Default Profile Picture"
+          class="profile-picture"
+        />
+        {{end}}
+      </div>
+      <h2>Posts by {{.ProfileUser.Username}}</h2>
+      {{range .Posts}}
+      <div class="post">
+        <h3><a href="/post/{{.ID}}">{{.Title}}</a></h3>
+        <p>{{.Content}}</p>
+        <p><em>Posted in {{.Category}}</em></p>
+      </div>
+      {{else}}
+      <p>No posts available</p>
+      {{end}}
+
+      <h3>
+        <a href="/profile/{{.ProfileUser.Username}}/followers"
+          >Followers: {{.FollowersCount}}</a
+        >
+      </h3>
+      <h3>
+        <a href="/profile/{{.ProfileUser.Username}}/following"
+          >Following: {{.FollowingCount}}</a
+        >
+      </h3>
+
+      {{if eq .CurrentUserID .ProfileUser.ID}}
+      <a href="/profile/{{.ProfileUser.Username}}/edit" class="button"
+        >Edit Profile</a
+      >
+      {{else}} {{if .IsFollowing}}
+      <form action="/profile/{{.ProfileUser.Username}}/unfollow" method="post">
+        <button type="submit">Unfollow</button>
+      </form>
+      {{else}}
+      <form action="/profile/{{.ProfileUser.Username}}/follow" method="post">
+        <button type="submit">Follow</button>
+      </form>
+      {{end}} {{end}}
+    </div>
+    <footer>
+      <p>&copy; 2024 Forum</p>
+    </footer>
+  </body>
+</html>

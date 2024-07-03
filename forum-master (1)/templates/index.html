@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <link rel="stylesheet" href="/static/style.css"> <!-- Vous pouvez omettre cette ligne si vous ne souhaitez pas utiliser de fichier CSS externe -->
+    <style>
+        .profile-picture {
+            float: left; /* Alignement à gauche */
+            margin-right: 10px; /* Espacement à droite */
+            max-width: 100px; /* Largeur maximale optionnelle */
+            height: auto; /* Garde le ratio hauteur/largeur */
+        }
+        .posted-by {
+            margin-top: 5px; /* Marge supérieure pour espacement vertical */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Forum</h1>
+    </header>
+    <nav>
+        {{if .User}}
+        <span>Bienvenue, {{.User}}!</span>
+        <a href="/logout">Logout</a>
+        <a href="/create-post">Create Post</a>
+        {{else}}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        {{end}}
+    </nav>
+    <div class="container">
+        <h2>Posts</h2>
+        {{range .Posts}}
+        <div class="post">
+            <div class="post-header">
+                <h3><a href="/post/{{.ID}}">{{.Title}}</a></h3>
+                <div class="post-user">
+                    {{if .User.ProfilePicture}}
+                    <div>
+                        <img src="/{{.User.ProfilePicture}}" alt="Profile Picture" class="profile-picture">
+                    </div>
+                    {{else}}
+                    <div>
+                        <img src="/static/default-profile.png" alt="Default Profile Picture" class="profile-picture">
+                    </div>
+                    {{end}}
+                    <div class="posted-by">
+                        <p>
+                            <em>Posted by <a href="/profile/{{.User.Username}}">{{.User.Username}}</a></em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p>{{.Content}}</p>
+        </div>
+        {{else}}
+        <p>No posts available</p>
+        {{end}}
+    </div>
+    <footer>
+        <p>&copy; 2024 Forum</p>
+    </footer>
+</body>
+</html>
