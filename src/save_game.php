@@ -3,7 +3,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérer les données du formulaire
     $title = $_POST["title"];
-    $platform = $_POST["platform"];
+    $platform = $_POST["maison_d_edition"];
     $release_date = $_POST["release_date"];
 
     // Valider les données (vous pouvez ajouter des vérifications supplémentaires ici)
@@ -19,12 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Préparer la requête d'insertion
-        $stmt = $pdo->prepare("INSERT INTO jeux_video (titre, plateforme, date_sortie) VALUES (:titre, :plateforme, :date_sortie)");
+        $stmt = $pdo->prepare("INSERT INTO jeux_video (titre, maison_d_edition, date_sortie) VALUES (:titre, :maison_d_edition, :date_sortie)");
 
         // Exécuter la requête avec les données du formulaire
         $stmt->execute(array(
             ':titre' => $title,
-            ':plateforme' => $platform,
+            ':maison_d_edition' => $platform,
             ':date_sortie' => $release_date
         ));
 
